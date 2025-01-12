@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from .models import *
 import json
 
-
 def store(request):
     if request.user.is_authenticated:
         customer = request.user.customer
@@ -51,8 +50,8 @@ def checkout(request):
 
 def updateItem(request):
     data = json.loads(request.body)
-    productId = data["productId"]
-    action = data["action"]
+    productId = data['productId']
+    action = data['action']
     print("Action:", action)
     print("Product:", productId)
 
@@ -70,3 +69,5 @@ def updateItem(request):
 
     if(orderItem.quantity <= 0):
         orderItem.delete()
+
+    return JsonResponse("Item was added", safe=False)
