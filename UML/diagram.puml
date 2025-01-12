@@ -1,0 +1,144 @@
+@startuml
+
+class GiftifyApp {
+    + main(args: String[]) : void
+}
+
+' Interfejs dla certyfikatów
+interface ICertificate {
+    + getDetails() : String
+    + getPrice() : double
+}
+
+' Klasa bazowa dla certyfikatów
+abstract class BaseCertificate {
+    + category : String
+    + location : String
+    + getDetails() : String
+    + getPrice() : double
+}
+
+BaseCertificate --> ICertificate
+
+' Konkretne implementacje certyfikatów
+class SpaCertificate {
+    + specificSpaService : String
+    + getDetails() : String
+    + getPrice() : double
+}
+class CulinaryCertificate {
+    + cuisineType : String
+    + getDetails() : String
+    + getPrice() : double
+}
+class SportsCertificate {
+    + activityType : String
+    + getDetails() : String
+    + getPrice() : double
+}
+
+SpaCertificate --> BaseCertificate
+CulinaryCertificate --> BaseCertificate
+SportsCertificate --> BaseCertificate
+
+' Wzorzec Factory Method
+class CertificateFactory {
+    + createCertificate(type: String, category: String, location: String) : ICertificate
+}
+
+CertificateFactory ..> ICertificate
+
+' Klasa użytkownika
+class User {
+    + userId : int
+    + name : String
+    + addToCart(certificate: ICertificate) : void
+}
+
+' Klasa koszyka
+class ShoppingCart {
+    + items : List<ICertificate>
+    + addItem(item: ICertificate) : void
+    + calculateTotal() : double
+}
+
+User --> ShoppingCart
+
+' Wzorzec Singleton dla ShoppingCart
+class ShoppingCartSingleton {
+    - instance : ShoppingCart
+    + getInstance() : ShoppingCart
+}
+
+ShoppingCartSingleton --> ShoppingCart
+
+' Wzorzec Strategy dla filtrów
+interface FilterStrategy {
+    + filter(certificates: List<ICertificate>) : List<ICertificate>
+}
+class CityFilter {
+    + filter(certificates: List<ICertificate>) : List<ICertificate>
+}
+class CategoryFilter {
+    + filter(certificates: List<ICertificate>) : List<ICertificate>
+}
+class PriceFilter {
+    + filter(certificates: List<ICertificate>) : List<ICertificate>
+}
+
+CityFilter --> FilterStrategy
+CategoryFilter --> FilterStrategy
+PriceFilter --> FilterStrategy
+
+' Klasa systemu rekomendacji
+class RecommendationSystem {
+    + recommend(user: User) : List<ICertificate>
+}
+
+User --> RecommendationSystem
+
+' Wzorzec Observer dla powiadomień
+interface Observer {
+    + update(message: String) : void
+}
+class UserObserver {
+    + update(message: String) : void
+}
+class OfferUpdateNotifier {
+    + notifyObservers() : void
+    + addObserver(observer: Observer) : void
+    + removeObserver(observer: Observer) : void
+}
+
+UserObserver --> Observer
+OfferUpdateNotifier ..> Observer
+
+' Wzorzec Decorator dla certyfikatów
+interface CertificateDecorator {
+    + getDetails() : String
+    + getPrice() : double
+}
+class PremiumTagDecorator {
+    + getDetails() : String
+    + getPrice() : double
+}
+class PromotionTagDecorator {
+    + getDetails() : String
+    + getPrice() : double
+}
+
+CertificateDecorator --> ICertificate
+PremiumTagDecorator --> CertificateDecorator
+PromotionTagDecorator --> CertificateDecorator
+
+' Wzorzec Facade
+class CatalogFacade {
+    + searchCertificates(criteria: String) : List<ICertificate>
+    + filterCertificates(filter: FilterStrategy) : List<ICertificate>
+    + getCertificateDetails(id: int) : ICertificate
+}
+
+CatalogFacade ..> ICertificate
+CatalogFacade ..> FilterStrategy
+
+@enduml
