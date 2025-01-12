@@ -1,7 +1,9 @@
 # Giftify
-Giftify is a platform for discovering and managing gift certificates across various categories. Built with scalable architecture and design patterns, it ensures flexibility and ease of use for personalized gifting solutions.  
+
+Giftify is a platform for discovering and managing gift certificates across various categories. Built with scalable architecture and design patterns, it ensures flexibility and ease of use for personalized gifting solutions.
 
 ## Applied Design Patterns and Their Justification
+
 The project uses several design patterns aimed at improving code organization and making development easier:
 
 - **Factory Method** – Allows for flexible and easy creation of certificate objects, making the system extensible.
@@ -12,6 +14,7 @@ The project uses several design patterns aimed at improving code organization an
 - **Facade** – Simplifies access to various system functions, such as searching and filtering certificates.
 
 ## Implementation of SOLID Principles in the Project
+
 The SOLID principles are applied in the following ways:
 
 - **S (Single Responsibility Principle)**: Each class and interface in the project has one well-defined responsibility. For example, `User` manages user data, and `CertificateFactory` is responsible for creating certificates.
@@ -27,12 +30,15 @@ To run the unit tests for the project, follow these steps:
 1. Make sure you have `pytest` installed:
    ```bash
    pip install pytest
+   ```
 2. Navigate to the root directory of the project, where the tests/ folder is located.
 
 3. Run all tests with the following command:
    ```bash
    pytest
+   ```
 4. To see more detailed test results, use the -v flag:
    ```bash
    pytest -v
-The tests are located in the tests/ folder. Each test file begins with test_ .
+   The tests are located in the tests/ folder. Each test file begins with test_ .
+   ```
