@@ -88,4 +88,4 @@ def processOrder(request):
         order.save()
     else:
         print("User is not logged in")
-    return JsonResponse("Payment subbmited...", safe=False)
+    return JsonResponse("Payment submitted...", safe=False)
