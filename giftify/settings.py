@@ -126,6 +126,9 @@ MEDIA_URL = "images/"
 
 MEDIA_ROOT = BASE_DIR / "static/images"
 
+LOGIN_REDIRECT_URL = "store"
+LOGOUT_REDIRECT_URL = "store"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

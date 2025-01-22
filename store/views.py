@@ -1,18 +1,62 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import *
 from .utils import cookieCart
 from .utils import cookieCart, cartData, guestOrder
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 import json
 import datetime
 
-def store(request):
-    data = cartData(request)
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Customer.objects.create(user=user)
+            login(request, user)
+            return redirect("store")
+    else:
+        form = UserCreationForm()
+    return render(request, "store/register.html", {"form": form})
 
+def custom_logout(request):
+    logout(request)
+    return redirect('store')
+
+def store(request):
+    if request.user.is_authenticated and not hasattr(request.user, 'customer'):
+        Customer.objects.create(user=request.user)
+
+    categories = Category.objects.all()
+    products = Product.objects.all()
+
+    category_id = request.GET.get('category')
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    price_range = request.GET.get('price_range')
+    if price_range:
+        products = products.filter(price__lte=price_range)
+        
+    place = request.GET.get('place')
+    if place:
+        products = products.filter(place__icontains=place)
+
+    data = cartData(request)
     cartItems = data['cartItems']
 
-    products = Product.objects.all()
-    context = {"products": products, "cartItems": cartItems}
+    context = {"products": products, "cartItems": cartItems, "categories": categories}
     return render(request, "store/store.html", context)
 
 
@@ -26,13 +70,16 @@ def cart(request):
     context = {"items": items, "order": order, "cartItems": cartItems}
     return render(request, "store/cart.html", context)
 
-
 def checkout(request):
     data = cartData(request)
 
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
+
+    if request.user.is_authenticated:
+        if not hasattr(request.user, 'customer'):
+            Customer.objects.create(user=request.user)
 
     context = {"items": items, "order": order, "cartItems": cartItems}
     return render(request, "store/checkout.html", context)
