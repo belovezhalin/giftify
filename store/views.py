@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import *
 from .utils import cookieCart
 from .utils import cookieCart, cartData, guestOrder
+from .decorators import SaleDecorator, SpecialOccasionDecorator
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -56,6 +57,14 @@ def store(request):
     place = request.GET.get('place')
     if place:
         products = products.filter(place__icontains=place)
+
+    decorated_products = []
+    for product in products:
+        if product.price > 100:  # Example condition for sale
+            product = SaleDecorator(product, 10)  # 10% discount
+        if "special" in product.name.lower():  # Example condition for special occasion
+            product = SpecialOccasionDecorator(product, "Special Occasion")
+        decorated_products.append(product)
 
     data = cartData(request)
     cartItems = data['cartItems']

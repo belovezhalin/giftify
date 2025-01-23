@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -22,6 +23,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     place = models.CharField(max_length=200, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
+    discount = models.FloatField(default=0, help_text="Discount percentage (0-100)")
+    special_mark = models.CharField(max_length=200, null=True, blank=True, help_text="Special mark for the product")
 
     def __str__(self):
         return self.name
@@ -33,6 +36,12 @@ class Product(models.Model):
         except:
             url = ""
         return url
+    
+    @property
+    def sale_price(self):
+        if self.discount > 0:
+            return round(self.price * Decimal(1 - self.discount / 100), 2)
+        return None
 
 
 class Order(models.Model):
