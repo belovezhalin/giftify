@@ -55,7 +55,7 @@
     <title>Giftify Store</title>
   </head>
   <body>
-
+    <div class="main-content">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'store' %}">Giftify</a>
       <button
@@ -93,12 +93,21 @@
         </div>
       </div>
     </nav>
+
     <hr />
 
     <div class="container">
       <br />
       {% block content %} {% endblock content %}
     </div>
+  </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 Giftify. All rights reserved.</p>
+        <p>Contact us: <a href="mailto:info@giftify.com">info@giftify.com</a></p>
+      </div>
+    </footer>
 
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
