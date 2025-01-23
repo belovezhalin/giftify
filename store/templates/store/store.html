@@ -6,6 +6,13 @@
   <div class="filter-container">
     <div class="filter-box">
       <form method="get">
+        <div class="form-group search-group">
+          <label for="search">Search</label>
+          <div class="search-input-container">
+            <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </div>
         <div class="form-group">
           <label for="category">Category</label>
           <select name="category" id="category" class="form-control">
@@ -33,40 +40,37 @@
         <a href="{% url 'store' %}" class="btn btn-secondary">Reset</a>
       </form>
     </div>
-    <div class="search-box">
-      <form method="get">
-        <div class="form-group">
-          <label for="search">Search</label>
-          <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}">
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
       <div class="ad-box">
-        <p>Discover amazing gifts at Giftify! Find the perfect present for any occasion.</p>
+        <p class="slide-left">Can't find the perfect gift?</p>
+        <p class="slide-right">Giftify is for you!</p>
       </div>
-    </div>
   </div>
   
   <div class="row">
     {% for product in products %}
     <div class="col-lg-4">
-      <img class="thumbnail" src="{{ product.imageURL }}" />
-      <div class="box-element product">
-        <h6><strong>{{ product.name }}</strong></h6>
-        <hr />
-        <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
-        <a class="btn btn-outline-success" href="#">View</a>
-        <h4 style="float: right">
-          {% if product.sale_price %}
-          <del>{{ product.price }} PLN</del> {{ product.sale_price }} PLN
-          {% else %}
-          {{ product.price }} PLN
-          {% endif %}
-        </h4>
-        {% if product.special_mark %}
-        <p class="card-text">{{ product.special_mark }}</p>
-        {% endif %}
-        <p class="card-text">{{ product.place }}</p>
+      <div class="product-container">
+        <div class="image-container">
+          <img class="thumbnail" src="{{ product.imageURL }}" />
+        </div>
+        <div class="box-element product">
+          <h6><strong>{{ product.name }}</strong>
+            {% if product.special_mark %}
+            <span class="special-mark">{{ product.special_mark }}</span>
+            {% endif %}
+          </h6>
+          <hr />
+          <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+          <a class="btn btn-outline-success" href="#">View</a>
+          <h4 style="float: right">
+            {% if product.sale_price %}
+            <del>{{ product.price }} PLN</del> <span class="sale-price">{{ product.sale_price }} PLN</span>
+            {% else %}
+            {{ product.price }} PLN
+            {% endif %}
+          </h4>
+          <p class="card-text">{{ product.place }}</p>
+        </div>
       </div>
     </div>
     {% endfor %}

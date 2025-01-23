@@ -31,12 +31,31 @@ h6 {
   padding: 10px;
 }
 
+.product-container {
+  position: relative;
+}
+
+.image-container {
+  position: relative;
+}
+
+.box-element .special-mark {
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 10px; /* Adjust spacing as needed */
+}
+
 .thumbnail {
   width: 100%;
   height: 200px;
   -webkit-box-shadow: -1px -3px 5px -2px rgba(214, 214, 214, 1);
   -moz-box-shadow: -1px -3px 5px -2px rgba(214, 214, 214, 1);
   box-shadow: -1px -3px 5px -2px rgba(214, 214, 214, 1);
+}
+
+.sale-price {
+  color: red;
 }
 
 .product {
@@ -79,6 +98,37 @@ h6 {
   width: 100px;
 }
 
+.search-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-input-container input {
+  flex: 1;
+  margin-right: 10px; /* Adjust spacing as needed */
+}
+
+.search-input-container button {
+  white-space: nowrap;
+}
+
+.large-ad {
+  height: 100%; /* Make the ad box take full height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa; /* Light background color */
+  border: 1px solid #dee2e6; /* Border color */
+  padding: 20px;
+  text-align: center;
+  font-size: 1.5em; /* Larger font size */
+}
+
 .filter-container {
   display: flex;
   justify-content: space-between;
@@ -101,17 +151,59 @@ h6 {
 }
 
 .ad-box {
-  background-color: #343a40; /* Same color as navbar */
-  color: #fff;
-  margin-top: 1rem;
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Stack the phrases vertically */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  text-align: center;
+  padding: 10px; 
+  background-color: #4f868c; 
+  border: 1px solid #4f868c;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  margin-left: 20px;
+  position: relative; 
+  object-fit: contain;
+  overflow: hidden; /* Ensure the text doesn't overflow the box */
 }
 
 .ad-box p {
   margin: 0;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #343a40;
+  padding: 0; /* Remove padding to touch the top and bottom borders */
+  font-weight: bold;
+  font-size: 2rem; /* Adjust font size */
+  color: white; /* Make text white */
+  word-wrap: break-word; /* Ensure text wraps to multiple lines */
+  font-style: italic; /* Make text italic */
+  line-height: 1; /* Adjust line height to ensure text touches top and bottom */
+  position: relative;
+}
+
+.slide-left {
+  animation: slide-in-left 3s forwards; /* Apply the left slide-in animation */
+}
+
+.slide-right {
+  animation: slide-in-right 3s forwards; /* Apply the right slide-in animation with a delay */
+}
+
+@keyframes slide-in-left {
+  from {
+    left: -100%; /* Start from the left */
+  }
+  to {
+    left: 0; /* End at the original position */
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    right: -100%; /* Start from the right */
+  }
+  to {
+    right: 0; /* End at the original position */
+  }
 }
 
 .d-flex {
@@ -168,13 +260,13 @@ h6 {
 }
 
 .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4f868c;
+  border-color: #4f868c;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #4f868c;
+  border-color: #4f868c;
 }
 
 .d-flex {
