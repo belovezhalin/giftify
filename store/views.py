@@ -10,6 +10,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 import json
 import datetime
+from django.db.models import Min, Max
 
 def register(request):
     if request.method == "POST":
@@ -34,6 +35,13 @@ def store(request):
     categories = Category.objects.all()
     products = Product.objects.all()
 
+    min_price_value = products.aggregate(Min('price'))['price__min'] or 0
+    max_price_value = products.aggregate(Max('price'))['price__max'] or 1000
+
+    search_query = request.GET.get('search')
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+
     category_id = request.GET.get('category')
     if category_id:
         products = products.filter(category_id=category_id)
@@ -45,10 +53,6 @@ def store(request):
     if max_price:
         products = products.filter(price__lte=max_price)
 
-    price_range = request.GET.get('price_range')
-    if price_range:
-        products = products.filter(price__lte=price_range)
-        
     place = request.GET.get('place')
     if place:
         products = products.filter(place__icontains=place)
@@ -56,7 +60,14 @@ def store(request):
     data = cartData(request)
     cartItems = data['cartItems']
 
-    context = {"products": products, "cartItems": cartItems, "categories": categories}
+    context = {
+        "products": products,
+        "cartItems": cartItems,
+        "categories": categories,
+        "min_price_value": min_price_value,
+        "max_price_value": max_price_value,
+    }
+
     return render(request, "store/store.html", context)
 
 

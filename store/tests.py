@@ -84,3 +84,13 @@ class StoreTests(TestCase):
         self.client.login(username='testuser', password='12345')
         response = self.client.get(reverse('logout'))
         self.assertEqual(response.status_code, 302)  # Redirect after successful logout
+
+    def test_store_view_with_search(self):
+        response = self.client.get(reverse('store'), {'search': 'Spa'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.product.name)
+
+    def test_store_view_with_search_no_results(self):
+        response = self.client.get(reverse('store'), {'search': 'Nonexistent'})
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.product.name)

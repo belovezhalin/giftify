@@ -1,6 +1,13 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
 <div class="container">
+
   <form method="get">
+    <div class="form-group">
+        <label for="search">Search</label>
+        <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+
     <div class="form-group">
         <label for="category">Category</label>
         <select name="category" id="category" class="form-control">
@@ -11,17 +18,14 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="min_price">Min Price</label>
-        <input type="number" name="min_price" id="min_price" class="form-control" value="{{ request.GET.min_price }}">
-    </div>
-    <div class="form-group">
-        <label for="max_price">Max Price</label>
-        <input type="number" name="max_price" id="max_price" class="form-control" value="{{ request.GET.max_price }}">
-    </div>
-    <div class="form-group">
-        <label for="price_range">Price Range</label>
-        <input type="range" name="price_range" id="price_range" class="form-control-range" min="0" max="1000" value="{{ request.GET.price_range }}" oninput="this.nextElementSibling.value = this.value">
-        <output>{{ request.GET.price_range }}</output>
+      <label for="price_range">Price Range</label>
+      <div id="price-slider"></div>
+      <div class="d-flex justify-content-between">
+          <span id="min-price">{{ min_price_value }} PLN</span>
+          <span id="max-price">{{ max_price_value }} PLN</span>
+      </div>
+      <input type="hidden" name="min_price" id="min_price" value="{{ request.GET.min_price|default:min_price_value }}">
+      <input type="hidden" name="max_price" id="max_price" value="{{ request.GET.max_price|default:max_price_value }}">
     </div>
     <div class="form-group">
         <label for="place">Place</label>
@@ -46,4 +50,33 @@
   {% endfor %}
 </div>
 </div>
-{% endblock content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+<script>
+    var slider = document.getElementById('price-slider');
+    noUiSlider.create(slider, {
+        start: [{{ request.GET.min_price|default:min_price_value }}, {{ request.GET.max_price|default:max_price_value }}],
+        connect: true,
+        range: {
+            'min': {{ min_price_value }},
+            'max': {{ max_price_value }}
+        },
+        tooltips: [true, true],
+        format: {
+            to: function (value) {
+                return Math.round(value);
+            },
+            from: function (value) {
+                return Number(value);
+            }
+        }
+    });
+
+    slider.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('min_price').value = values[0];
+        document.getElementById('max_price').value = values[1];
+        document.getElementById('min-price').innerText = values[0] + ' PLN';
+        document.getElementById('max-price').innerText = values[1] + ' PLN';
+    });
+</script>
+{% endblock %}
