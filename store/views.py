@@ -131,22 +131,34 @@ def updateItem(request):
     return JsonResponse("Item was added", safe=False)
 
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
-
+    transaction_id = datetime.datetime.now().timestamp()
     if request.user.is_authenticated:
         customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
     else:
-        guestOrder(request, data)
-     
-    total = float(data['form']['total'])
-    order.transaction_id = transaction_id
+        customer, created = Customer.objects.get_or_create(
+            email=data['form']['email'],
+        )
+        customer.name = data['form']['name']
+        customer.save()
 
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order.transaction_id = transaction_id
+    total = float(data['form']['total'])
     if total == order.get_cart_total:
         order.complete = True
     order.save()
-    return JsonResponse("Payment submitted...", safe=False)
+
+    if order.complete:
+        send_mail(
+            'Order Confirmation',
+            f'Thank you for your order, {customer.name}!\n\nYour order ID is {order.id}.',
+            'from@example.com',
+            [customer.email],
+            fail_silently=False,
+        )
+
+    return JsonResponse('Payment submitted..', safe=False)
 
 def subscribe_to_offers(request):
     if request.user.is_authenticated:

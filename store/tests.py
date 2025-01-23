@@ -1,8 +1,10 @@
+import json
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Category, Product, Customer
+from .models import Category, Order, OrderItem, Product, Customer
 from store.observers import UserObserver
 from django.contrib.auth.models import User
+from django.core import mail
 
 class StoreTests(TestCase):
 
@@ -108,3 +110,27 @@ class ObserverTestCase(TestCase):
         with self.assertLogs('django', level='INFO') as cm:
             self.product.save()
             self.assertIn('INFO:django:New offer on testuser: New offer on Test Product: 10% off!', cm.output)
+
+class OrderTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass')
+        self.customer = Customer.objects.create(user=self.user, email='testuser@example.com', name='Test User')
+        self.product = Product.objects.create(name='Test Product', price=100)
+        self.order = Order.objects.create(customer=self.customer, complete=False)
+        OrderItem.objects.create(order=self.order, product=self.product, quantity=1)
+
+    def test_order_completion_sends_email(self):
+        self.client.login(username='testuser', password='testpass')
+        response = self.client.post(reverse('process_order'), json.dumps({
+            'form': {
+                'name': 'Test User',
+                'email': 'testuser@example.com',
+                'total': '100.00'
+            }
+        }), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.order.refresh_from_db()
+        self.assertTrue(self.order.complete)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('Order Confirmation', mail.outbox[0].subject)
+        self.assertIn('Thank you for your order, Test User!', mail.outbox[0].body)
