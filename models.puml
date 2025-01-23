@@ -1,0 +1,113 @@
+@startuml models
+
+class User {
+}
+
+class Customer {
+  OneToOneField user
+  CharField name
+  EmailField email
+  __str__()
+}
+
+class Category {
+  CharField name
+  __str__()
+}
+
+class Product {
+  CharField name
+  DecimalField price
+  ForeignKey category
+  CharField place
+  ImageField image
+  FloatField discount
+  CharField special_mark
+  __str__()
+  save()
+}
+
+class Order {
+  ForeignKey customer
+  DateTimeField date_ordered
+  BooleanField complete
+  CharField transaction_id
+  get_cart_total()
+  get_cart_items()
+}
+
+class OrderItem {
+  ForeignKey product
+  ForeignKey order
+  IntegerField quantity
+  DateTimeField date_added
+  get_total()
+}
+
+class ProductAdmin {
+  list_display
+  list_filter
+  search_fields
+  fields
+}
+
+class ProductDecorator {
+  _product
+  __getattr__()
+}
+
+class SaleDecorator {
+  discount
+  sale_price
+}
+
+class SpecialOccasionDecorator {
+  occasion
+  mark
+}
+
+class Observer {
+  +update(message)
+}
+
+class Subject {
+  _observers
+  +attach(observer)
+  +detach(observer)
+  +notify(message)
+}
+
+class UserObserver {
+  customer
+  +update(message)
+}
+
+class Views {
+  +register(request)
+  +product_list(request)
+  +product_detail(request, pk)
+  +cart(request)
+  +checkout(request)
+  +updateItem(request)
+  +processOrder(request)
+}
+
+User <|-- Customer
+Category <|-- Product
+Customer <|-- Order
+Order <|-- OrderItem
+Product <|-- OrderItem
+Product <|-- ProductAdmin
+Product <|-- ProductDecorator
+ProductDecorator <|-- SaleDecorator
+ProductDecorator <|-- SpecialOccasionDecorator
+Observer <|-- UserObserver
+Subject <|-- UserObserver
+Utils <|-- Product
+Views <|-- User
+Views <|-- Customer
+Views <|-- Product
+Views <|-- Order
+Views <|-- OrderItem
+
+@enduml

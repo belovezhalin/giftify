@@ -1,7 +1,7 @@
 import json
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Category, Order, OrderItem, Product, Customer
+from store.models import *
 from store.observers import UserObserver
 from django.contrib.auth.models import User
 from django.core import mail
