@@ -1,7 +1,8 @@
 from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
-
+from .observers import Observer, Subject, UserObserver
+from django.core.mail import send_mail
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -17,7 +18,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Product(models.Model):
+class Product(models.Model, Subject):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
@@ -28,6 +29,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.discount > 0:
+            self.notify(f"New offer on {self.name}: {self.discount}% off!")
 
     @property
     def imageURL(self):

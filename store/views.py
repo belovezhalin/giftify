@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from .models import Product, Customer
+from .observers import UserObserver
 import json
 import datetime
 from django.db.models import Min, Max
@@ -145,3 +147,11 @@ def processOrder(request):
         order.complete = True
     order.save()
     return JsonResponse("Payment submitted...", safe=False)
+
+def subscribe_to_offers(request):
+    if request.user.is_authenticated:
+        customer = Customer.objects.get(user=request.user)
+        observer = UserObserver(customer)
+        for product in Product.objects.all():
+            product.attach(observer)
+    return redirect('store')

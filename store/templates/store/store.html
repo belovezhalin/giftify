@@ -3,40 +3,50 @@
 {% block content %}
 
 <div class="main-content">
-  <form method="get">
-    <div class="form-group">
-      <label for="search">Search</label>
-      <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}">
+  <div class="filter-container">
+    <div class="filter-box">
+      <form method="get">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select name="category" id="category" class="form-control">
+            <option value="">All</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="price_range">Price Range</label>
+          <div id="price-slider"></div>
+          <div class="d-flex justify-content-between">
+            <span id="min-price">{{ min_price_value }} PLN</span>
+            <span id="max-price">{{ max_price_value }} PLN</span>
+          </div>
+          <input type="hidden" name="min_price" id="min_price" value="{{ request.GET.min_price|default:min_price_value }}">
+          <input type="hidden" name="max_price" id="max_price" value="{{ request.GET.max_price|default:max_price_value }}">
+        </div>
+        <div class="form-group">
+          <label for="place">Place</label>
+          <input type="text" name="place" id="place" class="form-control" value="{{ request.GET.place }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{% url 'store' %}" class="btn btn-secondary">Reset</a>
+      </form>
     </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-
-    <div class="form-group">
-      <label for="category">Category</label>
-      <select name="category" id="category" class="form-control">
-        <option value="">All</option>
-        {% for category in categories %}
-        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="price_range">Price Range</label>
-      <div id="price-slider"></div>
-      <div class="d-flex justify-content-between">
-        <span id="min-price">{{ min_price_value }} PLN</span>
-        <span id="max-price">{{ max_price_value }} PLN</span>
+    <div class="search-box">
+      <form method="get">
+        <div class="form-group">
+          <label for="search">Search</label>
+          <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+      <div class="ad-box">
+        <p>Discover amazing gifts at Giftify! Find the perfect present for any occasion.</p>
       </div>
-      <input type="hidden" name="min_price" id="min_price" value="{{ request.GET.min_price|default:min_price_value }}">
-      <input type="hidden" name="max_price" id="max_price" value="{{ request.GET.max_price|default:max_price_value }}">
     </div>
-    <div class="form-group">
-      <label for="place">Place</label>
-      <input type="text" name="place" id="place" class="form-control" value="{{ request.GET.place }}">
-    </div>
-    <button type="submit" class="btn btn-primary">Filter</button>
-    <a href="{% url 'store' %}" class="btn btn-secondary">Reset</a>
-  </form>
-
+  </div>
+  
   <div class="row">
     {% for product in products %}
     <div class="col-lg-4">

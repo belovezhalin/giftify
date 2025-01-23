@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-
 class ProductDecorator:
     def __init__(self, product):
         self._product = product

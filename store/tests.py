@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from .models import Category, Product, Customer
+from store.observers import UserObserver
 from django.contrib.auth.models import User
 
 class StoreTests(TestCase):
@@ -94,3 +95,16 @@ class StoreTests(TestCase):
         response = self.client.get(reverse('store'), {'search': 'Nonexistent'})
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, self.product.name)
+
+class ObserverTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass')
+        self.customer = Customer.objects.create(user=self.user)
+        self.product = Product.objects.create(name='Test Product', price=100, discount=10)
+
+    def test_user_observer_receives_notification(self):
+        observer = UserObserver(self.customer)
+        self.product.attach(observer)
+        with self.assertLogs('django', level='INFO') as cm:
+            self.product.save()
+            self.assertIn('INFO:django:New offer on testuser: New offer on Test Product: 10% off!', cm.output)

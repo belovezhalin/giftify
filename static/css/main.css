@@ -79,10 +79,110 @@ h6 {
   width: 100px;
 }
 
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.filter-box, .search-box, .ad-box {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.filter-box {
+  width: 30%;
+}
+
+.search-box {
+  width: 65%;
+}
+
+.ad-box {
+  background-color: #343a40; /* Same color as navbar */
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.ad-box p {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #343a40;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.align-self-end {
+  align-self: flex-end;
+}
+
 .form-field {
   width: 250px;
   display: inline-block;
   padding: 5px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+#price-slider {
+  margin: 0.8rem 0;
+  width: 100%;
+}
+
+#min-price, #max-price {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.btn {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
 }
 
 .cart-row {
@@ -111,13 +211,6 @@ h6 {
   opacity: 0.6;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-}
-
 .hidden {
   display: none !important;
 }
@@ -128,11 +221,7 @@ body {
   color: #fff;
   padding: 10px;
   text-align: center;
-  width: 100%; /* Ensure the footer spans the full viewport width */
+  width: 100%; 
   position: relative;
-  box-sizing: border-box; /* Ensure padding is included in the width */
+  box-sizing: border-box; 
 }
-
-
-
-
