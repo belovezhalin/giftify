@@ -32,6 +32,7 @@
         <input type="text" name="place" id="place" class="form-control" value="{{ request.GET.place }}">
     </div>
     <button type="submit" class="btn btn-primary">Filter</button>
+    <a href="{% url 'store' %}" class="btn btn-secondary">Reset</a>
 </form>
 
 <div class="row">
@@ -55,11 +56,14 @@
 <script>
     var slider = document.getElementById('price-slider');
     noUiSlider.create(slider, {
-        start: [{{ request.GET.min_price|default:min_price_value }}, {{ request.GET.max_price|default:max_price_value }}],
+        start: [
+          JSON.parse('{{ request.GET.min_price|default:min_price_value }}'),
+          JSON.parse('{{ request.GET.max_price|default:max_price_value }}')
+        ],
         connect: true,
         range: {
-            'min': {{ min_price_value }},
-            'max': {{ max_price_value }}
+            'min': JSON.parse('{{ min_price_value }}'),
+            'max': JSON.parse('{{ max_price_value }}')
         },
         tooltips: [true, true],
         format: {
