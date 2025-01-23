@@ -40,16 +40,6 @@ W projekcie zastosowano różnorodne wzorce projektowe, które zwiększają czyt
 
 Zastosowanie tych wzorców pozwoliło na stworzenie elastycznej, skalowalnej i łatwej w utrzymaniu aplikacji.
 
-## Sposób implementacji zasad SOLID w projekcie
-
-Zasady SOLID zostały zastosowane w następujący sposób:
-
-- **S (Single Responsibility Principle)**: Każda klasa i interfejs w projekcie mają jedno, dobrze zdefiniowane zadanie. Na przykład `User` zarządza danymi użytkownika.
-- **O (Open/Closed Principle)**: Kod jest otwarty na rozszerzenia (np. nowe typy tagów), ale zamknięty na modyfikacje. Nowe certyfikaty mogą być dodawane poprzez rozszerzenie klas, nie zmieniając istniejącego kodu.
-- **L (Liskov Substitution Principle)**: Klasy pochodne (`SpaCertificate`, `CulinaryCertificate`, `SportsCertificate`) mogą być używane zamiast bazowej klasy `BaseCertificate` bez wprowadzania błędów.
-- **I (Interface Segregation Principle)**: Zastosowanie małych, dedykowanych interfejsów, takich jak `ICertificate`, aby umożliwić implementację tylko wymaganych metod.
-- **D (Dependency Inversion Principle)**: Wysokopoziomowe klasy (np. `ShoppingCart`, `CatalogFacade`) nie zależą od szczegółów implementacji certyfikatów, ale od abstrakcji (`ICertificate`).
-
 ## Doświadczenia związane z planowaniem zadań, korzystaniem z PlantUML i GitHub
 
 Planowanie zadań:
