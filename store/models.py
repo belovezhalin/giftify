@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
+from .decorators import *
 from .observers import Observer, Subject, UserObserver
 from django.core.mail import send_mail
 
@@ -49,9 +50,16 @@ class Product(models.Model, Subject):
     @property
     def sale_price(self):
         if self.discount > 0:
-            return round(self.price * Decimal(1 - self.discount / 100), 2)
+            decorated_product = SaleDecorator(self, self.discount)
+            return round(decorated_product.sale_price, 2)
         return None
 
+    @property
+    def special_occasion_mark(self):
+        if self.special_mark:
+            decorated_product = SpecialOccasionDecorator(self, self.special_mark)
+            return decorated_product.mark
+        return None
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
@@ -73,7 +81,6 @@ class Order(models.Model):
         orderitems = self.orderitem_set.all()
         total = sum([item.quantity for item in orderitems])
         return total
-
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)

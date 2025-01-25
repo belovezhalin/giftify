@@ -1,19 +1,18 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from .models import *
-from .utils import cookieCart
-from .utils import cookieCart, cartData, guestOrder
+from .observers import UserObserver
 from .decorators import SaleDecorator, SpecialOccasionDecorator
+from .utils import cookieCart, cartData, guestOrder
+
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.shortcuts import redirect
-from .models import Product, Customer
-from .observers import UserObserver
+from django.db.models import Min, Max
+
 import json
 import datetime
-from django.db.models import Min, Max
 
 def register(request):
     if request.method == "POST":
@@ -62,9 +61,9 @@ def store(request):
 
     decorated_products = []
     for product in products:
-        if product.price > 100:  # Example condition for sale
-            product = SaleDecorator(product, 10)  # 10% discount
-        if "special" in product.name.lower():  # Example condition for special occasion
+        if product.price > 100: 
+            product = SaleDecorator(product, 10) 
+        if "special" in product.name.lower():
             product = SpecialOccasionDecorator(product, "Special Occasion")
         decorated_products.append(product)
 

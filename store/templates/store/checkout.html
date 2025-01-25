@@ -1,4 +1,5 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}" />
 
 <div class="row">
   <div class="col-lg-6">
@@ -71,82 +72,84 @@
 <script src="https://www.paypal.com/sdk/js?client-id=ATm9To36Tp9ZlN7oSK7zZghVjBPYXD4Q2rXt5AfVTXfXunGJq0tJ6j7nu_5Wq9KvTP3GMwepjvxfDEkm&currency=PLN"></script>
 
 <script>
-  var total = '{{order.get_cart_total}}'
+  var total = "{{order.get_cart_total}}";
 
-  paypal.Buttons({
-
-      createOrder: function(data, actions) {
-          return actions.order.create({
-              purchase_units: [{
-                  amount: {
-                      value: parseFloat(total).toFixed(2)
-                  }
-              }]
-          });
+  paypal
+    .Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: parseFloat(total).toFixed(2),
+              },
+            },
+          ],
+        });
       },
 
-      onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                    submitFormData()
-                });
-            }
-
-  }).render('#paypal-button-container');
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+          alert("Transaction completed by " + details.payer.name.given_name);
+          submitFormData();
+        });
+      },
+    })
+    .render("#paypal-button-container");
 </script>
 
 <script type="text/javascript">
-  var total = '{{order.get_cart_total|floatformat:2}}'
+  var total = "{{order.get_cart_total|floatformat:2}}";
 
-  if (user != 'AnonymousUser') {
-    document.getElementById('user-info').innerHTML = ''
-		document.getElementById('form-wrapper').classList.add("hidden");
-	  document.getElementById('payment-info').classList.remove("hidden");
+  if (user != "AnonymousUser") {
+    document.getElementById("user-info").innerHTML = "";
+    document.getElementById("form-wrapper").classList.add("hidden");
+    document.getElementById("payment-info").classList.remove("hidden");
   }
 
-  var form = document.getElementById('form')
-  form.addEventListener('submit', function(e){
-      e.preventDefault()
-      console.log('Form Submitted...')
-      document.getElementById('form-button').classList.add("hidden");
-      document.getElementById('payment-info').classList.remove("hidden");
+  var form = document.getElementById("form");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log("Form Submitted...");
+    document.getElementById("form-button").classList.add("hidden");
+    document.getElementById("payment-info").classList.remove("hidden");
+  });
+
+  function submitFormData() {
+    console.log("Payment button clicked");
+
+    var userFormData = {
+      name: null,
+      email: null,
+      total: total,
+    };
+
+    if (user == "AnonymousUser") {
+      userFormData.name = form.name.value;
+      userFormData.email = form.email.value;
+    }
+
+    console.log("User Info:", userFormData);
+
+    var url = "/process_order/";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify({ form: userFormData }),
     })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Transaction completed");
 
-	    function submitFormData() {
-	    	console.log('Payment button clicked')
+        cart = {};
+        document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
 
-        var userFormData = {
-          'name': null,
-          'email': null,
-          'total': total,
-        }
-
-        if (user == 'AnonymousUser') {
-          userFormData.name = form.name.value
-          userFormData.email = form.email.value
-        }
-
-        console.log('User Info:', userFormData)
-
-        var url = '/process_order/'
-        fetch(url, {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'X-CSRFToken':csrftoken,
-          },
-          body:JSON.stringify({'form':userFormData}),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Success:', data)
-          alert('Transaction completed')
-
-          cart = {}
-          document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
-
-          window.location.href = "{% url 'store' %}"
-	      })
-      }
+        window.location.href = "{% url 'store' %}";
+      });
+  }
 </script>
 {% endblock content %}

@@ -1,4 +1,6 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}" />
+
 <div class="row">
   <div class="col-lg-12">
     <div class="box-element">
@@ -51,12 +53,16 @@
         <div style="flex: 1">
           <p class="quantity">x{{item.quantity}}</p>
           <div class="quantity">
-            <img data-product="{{item.product.id}}" data-action="add"
+            <img
+              data-product="{{item.product.id}}"
+              data-action="add"
               class="chg-quantity update-cart"
               src="{% static  'images/arrow-up.png' %}"
             />
 
-            <img data-product="{{item.product.id}}" data-action="remove"
+            <img
+              data-product="{{item.product.id}}"
+              data-action="remove"
               class="chg-quantity update-cart"
               src="{% static  'images/arrow-down.png' %}"
             />

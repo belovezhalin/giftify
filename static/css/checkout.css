@@ -1,0 +1,23 @@
+.form-field {
+  width: 250px;
+  display: inline-block;
+  padding: 5px;
+}
+
+.form-control {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.cart-row {
+  display: flex;
+  align-items: flex-stretch;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ececec;
+}
+
+.hidden {
+  display: none !important;
+}
